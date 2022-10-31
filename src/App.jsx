@@ -9,6 +9,8 @@ import Dashboard from "./pages/Dashboard";
 import { ToastContainer } from "react-toastify";
 import PrivateRoute from "./components/PrivateRoute";
 import Footer from "./components/Footer";
+import Seller from "./components/Seller";
+import Bookings from "./components/Bookings";
 
 function App() {
   return (
@@ -26,7 +28,24 @@ function App() {
               <Dashboard />
             </PrivateRoute>
           }
-        />
+        >
+          <Route
+            path="/dashboard/bookings"
+            element={
+              <PrivateRoute>
+                <Bookings />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/dashboard/seller"
+            element={
+              <PrivateRoute>
+                <Seller />
+              </PrivateRoute>
+            }
+          />
+        </Route>
         <Route path="/hotels/:id" element={<SingleHotel />} />
         <Route path="*" element={<Error />} />
       </Routes>

@@ -27,7 +27,7 @@ const Login = () => {
           payload: res.data,
         });
         // 2. Navigate to the dashboard
-        navigate("/dashboard");
+        navigate("/dashboard/bookings");
       }
     } catch (err) {
       toast.error(err.response.data);

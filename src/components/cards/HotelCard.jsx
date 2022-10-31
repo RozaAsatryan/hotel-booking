@@ -4,6 +4,7 @@ import { BiBed } from "react-icons/bi";
 import { GoLocation } from "react-icons/go";
 import { BiCalendar } from "react-icons/bi";
 import { diffDays } from "../../actions/hotels";
+import moment from "moment";
 
 const HotelCard = ({ hotel }) => {
   return (
@@ -29,6 +30,11 @@ const HotelCard = ({ hotel }) => {
         <Card.Text>
           <small>
             Available from {new Date(hotel.from).toLocaleDateString()}
+          </small>
+        </Card.Text>
+        <Card.Text>
+          <small>
+            <i>{`Posted ${moment(hotel.createdAt).fromNow()}`}</i>
           </small>
         </Card.Text>
       </Card.Body>

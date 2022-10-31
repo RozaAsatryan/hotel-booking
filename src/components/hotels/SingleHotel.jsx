@@ -34,7 +34,7 @@ const SingleHotel = () => {
           <Row>
             <Col md={6}>
               <img
-                className="w-100"
+                className="w-100 position-sticky top-30"
                 src={`${import.meta.env.VITE_APP_API}/hotel/image/${params.id}`}
                 alt={hotel.title}
               />
@@ -56,6 +56,7 @@ const SingleHotel = () => {
                 <BiBed /> {hotel.bed}
               </p>
               <p>Available from {new Date(hotel.from).toLocaleDateString()}</p>
+             
             </Col>
           </Row>
         </Container>

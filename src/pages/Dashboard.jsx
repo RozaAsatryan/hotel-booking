@@ -1,9 +1,22 @@
-import React from 'react'
+import UserInfo from "../components/user/UserInfo";
+import { useSelector } from "react-redux";
+import DashboradTabs from "../components/DashboradTabs";
+import { Outlet } from "react-router";
+import { Container } from "react-bootstrap";
 
 const Dashboard = () => {
-  return (
-    <div>Dashboard</div>
-  )
-}
+  const { auth } = useSelector((state) => ({ ...state }));
+  const { user, token } = auth;
 
-export default Dashboard
+  return (
+    <>
+      <UserInfo />
+      <DashboradTabs />
+      <Container>
+        <Outlet />
+      </Container>
+    </>
+  );
+};
+
+export default Dashboard;
