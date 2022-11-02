@@ -27,20 +27,20 @@ const Hotels = () => {
 
   return (
     <>
-      {hotels &&
-        hotels.length &&
-        hotels.map((hotel, index) => {
-          return (
-            <Col key={hotel._id} md={3}>
-              <Link
-                to={`hotels/${hotel._id}`}
-                className="text-decoration-none text-dark"
-              >
-                <HotelCard hotel={hotel} />
-              </Link>
-            </Col>
-          );
-        })}
+      {hotels && hotels.length ? (
+        hotels.map((hotel) => (
+          <Col key={hotel._id} md={3}>
+            <Link
+              to={`/hotels/${hotel._id}`}
+              className="text-decoration-none text-dark"
+            >
+              <HotelCard hotel={hotel} />
+            </Link>
+          </Col>
+        ))
+      ) : (
+        <span>no hotels found</span>
+      )}
     </>
   );
 };
