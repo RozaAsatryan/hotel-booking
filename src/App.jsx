@@ -11,6 +11,7 @@ import PrivateRoute from "./components/PrivateRoute";
 import Footer from "./components/Footer";
 import Seller from "./components/Seller";
 import Bookings from "./components/Bookings";
+import AddHotels from "./components/hotels/AddHotels";
 
 function App() {
   return (
@@ -46,6 +47,14 @@ function App() {
             }
           />
         </Route>
+        <Route
+          path="/hotels/new"
+          element={
+            <PrivateRoute>
+              <AddHotels />
+            </PrivateRoute>
+          }
+        />
         <Route path="/hotels/:id" element={<SingleHotel />} />
         <Route path="*" element={<Error />} />
       </Routes>
