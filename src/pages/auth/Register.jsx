@@ -1,83 +1,113 @@
-import { useState } from "react";
-import React from "react";
-import Button from "react-bootstrap/Button";
-import Form from "react-bootstrap/Form";
-import { Container, Row, Col } from "react-bootstrap";
-import { register } from "../../actions/auth/auth";
-// import { toast } from "react-toastify";
-import { useNavigate } from "react-router";
+import { useState } from 'react';
+import { Container, Row, Col, Button, Spinner } from 'react-bootstrap';
+import { register } from '../../actions/auth/auth';
+import { toast } from 'react-toastify';
+import { useNavigate } from 'react-router';
+
+// Formik
+import { Formik, Form, useFormik, Field, ErrorMessage } from 'formik';
+import * as Yup from 'yup';
 
 const Register = () => {
+  const validationSchema = Yup.object().shape({
+    name: Yup.string()
+      .required('Name is Required.')
+      .min(2, 'Name is Too Short.'),
+    email: Yup.string().email().required('Email is Required.'),
+    password: Yup.string()
+      .required('No password provided.')
+      .min(6, 'Password is too short - should be 6 chars minimum.')
+      .matches(/(?=.*[0-9])/, 'Password must contain a number.'),
+  });
   const navigate = useNavigate();
 
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
 
-  const registerHandler = async (e) => {
-    e.preventDefault();
-
-    try {
-      const res = await register({ name, email, password });
-      console.log("Login response =>", res);
-      toast.success("You are registered!");
-      setTimeout(() => {
-        navigate("/login");
-      }, 1000);
-    } catch (err) {
-      // toast.error(err.response.data);
-    }
-    console.log(name, email, password);
+  const initialValues = {
+    name: '',
+    email: '',
+    password: '',
   };
+  const onSubmit = async (values) => {
+    const response = await register(values);
+    toast.success('successfully registered');
+    setTimeout(() => {
+      navigate('/login');
+    }, 1000);
+  };
+  const formik = useFormik({
+    initialValues,
+    onSubmit,
+  });
+
   return (
-    <Container>
-      <Row>
-        <Col md={{ span: 4, offset: 4 }} className="mt-2">
-          <div className="h3">Create account!</div>
-          <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. </p>
-          <Form onSubmit={registerHandler}>
-            <Form.Group className="mb-3" controlId="formBasicEmail">
-              <Form.Label>Name</Form.Label>
-              <Form.Control
-                type="text"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-              />
-            </Form.Group>
-
-            <Form.Group className="mb-3" controlId="formBasicEmail">
-              <Form.Label>Email</Form.Label>
-              <Form.Control
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-              />
-            </Form.Group>
-
-            <Form.Group className="mb-3" controlId="formBasicPassword">
-              <Form.Label>Password</Form.Label>
-              <Form.Control
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-              />
-            </Form.Group>
-
-            <Button variant="primary" type="submit">
-              Sign Up
-            </Button>
-
-            <p className="mt-3">
-              <small className="text-muted">
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Et
-                explicabo aspernatur totam dicta libero non aliquam earum
-                pariatur aperiam rerum
-              </small>
-            </p>
-          </Form>
-        </Col>
-      </Row>
-    </Container>
+    <div
+      style={{
+        backgroundImage:
+          'url(https://redpithemes.com/Documentation/assets/img/page_bg/page_bg_blur02.jpg)',
+      }}
+    >
+      <Container>
+        <Row>
+          <Col
+            md={{ span: 4, offset: 4 }}
+            className="mt-4 mb-5 p-4 form-shadow"
+          >
+            <div className="h3 text-align-center">Create account</div>
+            <Formik
+              initialValues={initialValues}
+              onSubmit={onSubmit}
+              validationSchema={validationSchema}
+            >
+              <Form>
+                <div className="d-flex flex-column mt-5 mb-5">
+                  <label className="form-label">Name</label>
+                  <Field name="name" className="form-input" type="text" />
+                  <span className="text-danger text-align-end">
+                    <ErrorMessage name="name" />
+                  </span>
+                </div>
+                <div className="d-flex flex-column mt-5 mb-5">
+                  <label className="form-label">Email</label>
+                  <Field name="email" className="form-input" type="email" />
+                  <span className="text-danger text-align-end">
+                    <ErrorMessage name="email" />
+                  </span>
+                </div>
+                <div className="d-flex flex-column mt-5 mb-5">
+                  <label className="form-label">Password</label>
+                  <Field
+                    className="form-input"
+                    type="password"
+                    name="password"
+                  />
+                  <span className="text-danger text-align-end">
+                    <ErrorMessage name="password" />
+                  </span>
+                </div>
+                <Button
+                  variant="primary"
+                  type="submit"
+                  disabled={loading}
+                  className="w-100 mt-5"
+                  style={{ backgroundColor: 'var(--main-color)' }}
+                >
+                  {loading && (
+                    <Spinner animation="border" className="spinner-custom" />
+                  )}
+                  Sign up
+                </Button>
+                <p className="text-muted text-align-center mt-4">
+                  After creating an account, you will be able to book a room,
+                  see all reservations, as well as if you are the owner, you can
+                  add rooms for reservation.
+                </p>
+              </Form>
+            </Formik>
+          </Col>
+        </Row>
+      </Container>
+    </div>
   );
 };
 

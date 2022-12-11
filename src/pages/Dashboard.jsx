@@ -1,21 +1,23 @@
-import UserInfo from "../components/user/UserInfo";
-import { useSelector } from "react-redux";
-import DashboradTabs from "../components/DashboradTabs";
-import { Outlet } from "react-router";
-import { Container } from "react-bootstrap";
+import UserInfo from '../components/user/UserInfo';
+import DashboardTabs from '../components/DashboardTabs';
+import { Outlet } from 'react-router';
+import { Container, Col, Row } from 'react-bootstrap';
 
 const Dashboard = () => {
-  const { auth } = useSelector((state) => ({ ...state }));
-  const { user, token } = auth;
-
   return (
-    <>
-      <UserInfo />
-      <DashboradTabs />
-      <Container>
-        <Outlet />
-      </Container>
-    </>
+    <Container className="mt-5 mb-5">
+      <Row>
+        <Col md={3} className="mb-5">
+          <UserInfo />
+        </Col>
+        <Col md={9}>
+          <DashboardTabs />
+          <Container>
+            <Outlet />
+          </Container>
+        </Col>
+      </Row>
+    </Container>
   );
 };
 

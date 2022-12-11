@@ -1,13 +1,8 @@
-import React from "react";
-import { Link, useLocation } from "react-router-dom";
-import Container from "react-bootstrap/Container";
-import { useState } from "react";
-import { NavLink } from "react-bootstrap";
-import { useEffect } from "react";
+import React from 'react';
+import { Link, useLocation } from 'react-router-dom';
+import Container from 'react-bootstrap/Container';
 
 const DashboardTabs = () => {
-  // const [active, setActive] = useState(window.location.pathname);
-
   const params = useLocation();
 
   return (
@@ -15,9 +10,8 @@ const DashboardTabs = () => {
       <ul className="nav nav-tabs">
         <li className="nav-item">
           <Link
-            // onClick={() => setActive("/dashboard/bookings")}
             className={`nav-link ${
-              params.pathname === "/dashboard/bookings" && "active"
+              params.pathname === '/dashboard/bookings' && 'active'
             }`}
             to="/dashboard/bookings"
           >
@@ -26,9 +20,8 @@ const DashboardTabs = () => {
         </li>
         <li className="nav-item">
           <Link
-            // onClick={() => setActive("/dashboard/seller")}
             className={`nav-link ${
-              params.pathname === "/dashboard/seller" && "active"
+              params.pathname === '/dashboard/seller' && 'active'
             }`}
             to="/dashboard/seller"
           >

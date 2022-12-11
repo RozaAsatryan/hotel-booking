@@ -1,78 +1,111 @@
-import React from "react";
-import Button from "react-bootstrap/Button";
-import Form from "react-bootstrap/Form";
-import { Container, Row, Col } from "react-bootstrap";
-import { useNavigate } from "react-router";
-import { useState } from "react";
-import { login } from "../../actions/auth/auth";
-import { toast } from "react-toastify";
-import { useDispatch } from "react-redux";
+import { login } from '../../actions/auth/auth';
+import { useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router';
+import { Link } from 'react-router-dom';
+
+// Bootstrap
+import { Container, Row, Col, Button, Spinner } from 'react-bootstrap';
+
+// Formik
+import { Formik, Form, useFormik, Field, ErrorMessage } from 'formik';
+import * as Yup from 'yup';
 
 const Login = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const [loading, setLoading] = useState(false);
 
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-
-  const handleLogin = async (e) => {
-    e.preventDefault();
-    try {
-      const res = await login({ email, password });
-      if (res.data) {
-        // 1. Save user's info
-        window.localStorage.setItem("auth", JSON.stringify(res.data));
-        dispatch({
-          type: "LOGGED_IN_USER",
-          payload: res.data,
-        });
-        // 2. Navigate to the dashboard
-        navigate("/dashboard/bookings");
-      }
-    } catch (err) {
-      toast.error(err.response.data);
+  const validationSchema = Yup.object({
+    email: Yup.string().email('Invalid email format').required('Required'),
+    password: Yup.string().required('Required'),
+  });
+  const initialValues = {
+    email: '',
+    password: '',
+  };
+  const onSubmit = async (values) => {
+    const response = await login(values);
+    setTimeout(() => {
+      navigate('/dashboard/bookings');
+    }, 1000);
+    if (response.data) {
+      window.localStorage.setItem('auth', JSON.stringify(response.data));
+      dispatch({
+        type: 'LOGGED_IN_USER',
+        payload: response.data,
+      });
     }
   };
 
+  const formik = useFormik({
+    initialValues,
+    onSubmit,
+  });
+
   return (
-    <Container>
-      <Row>
-        <Col md={{ span: 4, offset: 4 }}>
-          <div className="h3">Sign in or create an account</div>
-          <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. </p>
-          <Form onSubmit={handleLogin}>
-            <Form.Group className="mb-3" controlId="formBasicEmail">
-              <Form.Label>Email</Form.Label>
-              <Form.Control
-                type="email"
-                onChange={(e) => setEmail(e.target.value)}
-                value={email}
-              />
-            </Form.Group>
-
-            <Form.Group className="mb-3" controlId="formBasicPassword">
-              <Form.Label>Password</Form.Label>
-              <Form.Control
-                type="password"
-                onChange={(e) => setPassword(e.target.value)}
-                value={password}
-              />
-            </Form.Group>
-
-            <Button variant="primary" type="submit">
-              Sign In
-            </Button>
-            <p className="mt-3">
-              <small className="text-muted">
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Et
-                explicabo aspernatur totam dicta libero non aliquam earum
-                pariatur aperiam rerum
-              </small>
+    <div
+      style={{
+        backgroundImage:
+          'url(https://redpithemes.com/Documentation/assets/img/page_bg/page_bg_blur02.jpg)',
+      }}
+    >
+      <Container>
+        <Row>
+          <Col
+            md={{ span: 4, offset: 4 }}
+            className="mt-5 mb-5 p-4 form-shadow h-100"
+          >
+            <div className="h3 text-align-center">Sign In</div>
+            <p className="text-align-center">
+              Not Registered yet? <Link to="/register">Sign Up</Link>
             </p>
-          </Form>
-        </Col>
-      </Row>
-    </Container>
+            <Formik
+              initialValues={initialValues}
+              onSubmit={onSubmit}
+              validationSchema={validationSchema}
+            >
+              <Form>
+                <div className="d-flex flex-column mt-5 mb-5">
+                  <label className="form-label">Email</label>
+                  <Field name="email" className="form-input" type="email" />
+                  <span className="text-danger">
+                    <ErrorMessage name="email"></ErrorMessage>
+                  </span>
+                </div>
+
+                <div className="d-flex flex-column mt-5 mb-5">
+                  <label className="form-label">Password</label>
+                  <Field
+                    name="password"
+                    className="form-input"
+                    type="password"
+                  />
+                  <span className="text-danger">
+                    <ErrorMessage name="password"></ErrorMessage>
+                  </span>
+                </div>
+                <Button
+                  variant="primary"
+                  type="submit"
+                  disabled={loading}
+                  className="w-100"
+                  style={{ backgroundColor: 'var(--main-color)' }}
+                >
+                  {loading && (
+                    <Spinner animation="border" className="spinner-custom" />
+                  )}
+                  Sign in
+                </Button>
+                <p className="mt-4 text-align-center">
+                  Forget <Link>Password</Link>?
+                </p>
+              </Form>
+            </Formik>
+          </Col>
+        </Row>
+      </Container>
+    </div>
   );
 };
 

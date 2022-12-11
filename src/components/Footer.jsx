@@ -1,9 +1,9 @@
-import React from "react";
+import React from 'react';
 
 const Footer = () => {
   return (
-    <div className="footer text-light text-center bg-dark">
-      www.hotelbooking.com | All rightss reserved!
+    <div className="footer text-white bg-maincolor text-center p-2">
+      www.bandb.am | All rights reserved!
     </div>
   );
 };

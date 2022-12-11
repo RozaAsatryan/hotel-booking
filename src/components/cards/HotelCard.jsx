@@ -1,12 +1,25 @@
-import React from "react";
-import Card from "react-bootstrap/Card";
-import { BiBed } from "react-icons/bi";
-import { GoLocation } from "react-icons/go";
-import { BiCalendar } from "react-icons/bi";
-import { diffDays } from "../../actions/hotels";
-import moment from "moment";
+import { Card, Button } from 'react-bootstrap';
+import { useNavigate } from 'react-router';
+import { BiBed } from 'react-icons/bi';
+import { BiCalendarAlt } from 'react-icons/bi';
+import { BsCurrencyDollar } from 'react-icons/bs';
+import { GoLocation } from 'react-icons/go';
+import { diffDays } from '../../actions/hotels';
+import moment from 'moment/moment';
 
-const HotelCard = ({ hotel }) => {
+const HotelCard = ({ hotel, isOwner = false, setSmShow, setId }) => {
+  const navigate = useNavigate();
+  const navigateToEdit = (e) => {
+    e.preventDefault();
+    navigate('/hotels/edit', { state: { id: hotel._id } });
+  };
+
+  const openDeleteModal = (e) => {
+    e.preventDefault();
+    setSmShow(true);
+    setId(hotel._id);
+  };
+
   return (
     <Card className="mb-4">
       <Card.Img
@@ -17,26 +30,39 @@ const HotelCard = ({ hotel }) => {
         <Card.Title>{hotel.title}</Card.Title>
         <Card.Text className="mb-2">
           <GoLocation />
-          Naama Bay, Sharl El Sheikh, Egypt
+          {hotel.location}
         </Card.Text>
         <Card.Text className="mb-2">
-          <BiCalendar />
-          for {diffDays(hotel.from, hotel.to)}{" "}
-          {diffDays(hotel.from, hotel.to) <= 1 ? " day" : " days"}
+          <BiCalendarAlt />
+          for {diffDays(hotel.from, hotel.to)}{' '}
+          {diffDays(hotel.from, hotel.to) <= 1 ? ' day' : ' days'}
         </Card.Text>
         <Card.Text className="mb-2">
-          <BiBed /> 2 bed
+          <BiBed /> {hotel.bed} bed
         </Card.Text>
-        <Card.Text>
+        <Card.Text className="mb-2">
+          <BsCurrencyDollar /> {hotel.price}
+        </Card.Text>
+        <Card.Text className="text-muted ">
           <small>
             Available from {new Date(hotel.from).toLocaleDateString()}
           </small>
         </Card.Text>
-        <Card.Text>
+        <Card.Text className="text-muted ">
           <small>
-            <i>{`Posted ${moment(hotel.createdAt).fromNow()}`}</i>
+            <i>Posted {moment(hotel.createdAt).fromNow()}</i>
           </small>
         </Card.Text>
+        {isOwner && (
+          <div className="d-grid gap-2">
+            <Button variant="warning" onClick={navigateToEdit}>
+              Edit
+            </Button>
+            <Button variant="danger" onClick={openDeleteModal}>
+              Delete
+            </Button>
+          </div>
+        )}
       </Card.Body>
     </Card>
   );

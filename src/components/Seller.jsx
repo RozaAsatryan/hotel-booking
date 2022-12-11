@@ -1,12 +1,9 @@
-import { Col, Container, Row } from "react-bootstrap";
-import Connected from "./dashboard/Connected";
-import NotConnected from "./dashboard/NotConnected";
-import { useSelector } from "react-redux/es/exports";
+import { useSelector } from 'react-redux';
+import Connected from './dashboard/Connected';
+import NotConnected from './dashboard/NotConnected';
 
 const Seller = () => {
   const { auth } = useSelector((state) => ({ ...state }));
-  
-
 
   return (
     <>
